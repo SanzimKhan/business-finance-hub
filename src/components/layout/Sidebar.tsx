@@ -1,5 +1,6 @@
 import { NavLink } from 'react-router-dom';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/context/AuthContext';
 import {
   LayoutDashboard,
   Home,
@@ -11,13 +12,13 @@ import {
   GraduationCap,
   School,
   Briefcase,
-  Settings,
   LogOut,
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
 
 const navItems = [
   { path: '/', label: 'Dashboard', icon: LayoutDashboard },
@@ -34,6 +35,12 @@ const navItems = [
 
 export function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
+  const { signOut, user } = useAuth();
+
+  const handleLogout = async () => {
+    await signOut();
+    toast.success('Logged out successfully');
+  };
 
   return (
     <aside
@@ -87,14 +94,22 @@ export function Sidebar() {
 
         {/* Bottom Section */}
         <div className="border-t border-sidebar-border p-3 space-y-1">
+          {/* User email */}
+          {!collapsed && user && (
+            <div className="px-3 py-2 text-xs text-sidebar-foreground/60 truncate">
+              {user.email}
+            </div>
+          )}
+          
           <button
+            onClick={handleLogout}
             className={cn(
-              'flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-sidebar-foreground transition-all duration-200 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
+              'flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-sidebar-foreground transition-all duration-200 hover:bg-destructive/10 hover:text-destructive',
               collapsed && 'justify-center px-2'
             )}
           >
-            <Settings className="h-5 w-5 shrink-0" />
-            {!collapsed && <span>Settings</span>}
+            <LogOut className="h-5 w-5 shrink-0" />
+            {!collapsed && <span>Logout</span>}
           </button>
           
           <Button

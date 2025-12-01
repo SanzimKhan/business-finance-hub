@@ -68,7 +68,7 @@ export interface Project {
   totalCost: number;
   totalIncome: number;
   hoursSpent: number;
-  status: 'active' | 'completed' | 'on-hold';
+  status: 'active' | 'completed' | 'paused';
   startDate: string;
 }
 

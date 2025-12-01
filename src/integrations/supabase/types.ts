@@ -14,16 +14,279 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      components: {
+        Row: {
+          category: string | null
+          created_at: string
+          id: string
+          min_stock: number
+          name: string
+          quantity: number
+          unit_price: number
+          user_id: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          id?: string
+          min_stock?: number
+          name: string
+          quantity?: number
+          unit_price: number
+          user_id: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          id?: string
+          min_stock?: number
+          name?: string
+          quantity?: number
+          unit_price?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      employees: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          position: string
+          salary: number
+          start_date: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          position: string
+          salary: number
+          start_date: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          position?: string
+          salary?: number
+          start_date?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      print_jobs: {
+        Row: {
+          created_at: string
+          date: string
+          electricity_cost: number
+          filament_cost: number
+          filament_used: number
+          hourly_rate: number
+          id: string
+          labor_hours: number
+          name: string
+          total_cost: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          date?: string
+          electricity_cost?: number
+          filament_cost?: number
+          filament_used?: number
+          hourly_rate?: number
+          id?: string
+          labor_hours?: number
+          name: string
+          total_cost?: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          date?: string
+          electricity_cost?: number
+          filament_cost?: number
+          filament_used?: number
+          hourly_rate?: number
+          id?: string
+          labor_hours?: number
+          name?: string
+          total_cost?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string | null
+          full_name: string | null
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      projects: {
+        Row: {
+          created_at: string
+          description: string | null
+          hours_spent: number
+          id: string
+          name: string
+          start_date: string
+          status: string
+          total_cost: number
+          total_income: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          hours_spent?: number
+          id?: string
+          name: string
+          start_date?: string
+          status?: string
+          total_cost?: number
+          total_income?: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          hours_spent?: number
+          id?: string
+          name?: string
+          start_date?: string
+          status?: string
+          total_cost?: number
+          total_income?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      students: {
+        Row: {
+          batch_id: string | null
+          course: string
+          created_at: string
+          email: string | null
+          enrollment_date: string
+          id: string
+          name: string
+          payment_status: string
+          user_id: string
+        }
+        Insert: {
+          batch_id?: string | null
+          course: string
+          created_at?: string
+          email?: string | null
+          enrollment_date?: string
+          id?: string
+          name: string
+          payment_status?: string
+          user_id: string
+        }
+        Update: {
+          batch_id?: string | null
+          course?: string
+          created_at?: string
+          email?: string | null
+          enrollment_date?: string
+          id?: string
+          name?: string
+          payment_status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      transactions: {
+        Row: {
+          amount: number
+          category: string
+          created_at: string
+          date: string
+          description: string | null
+          id: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          category: string
+          created_at?: string
+          date?: string
+          description?: string | null
+          id?: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          category?: string
+          created_at?: string
+          date?: string
+          description?: string | null
+          id?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +413,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+    },
   },
 } as const

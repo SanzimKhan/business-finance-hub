@@ -1,5 +1,8 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { Transaction, Employee, Component, Student, PrintJob, Project, DashboardSummary } from '@/types/finance';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
+import { Transaction, Employee, Component, Student, PrintJob, Project, DashboardSummary, CategoryType } from '@/types/finance';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/context/AuthContext';
+import { toast } from 'sonner';
 
 interface FinanceContextType {
   transactions: Transaction[];
@@ -8,6 +11,7 @@ interface FinanceContextType {
   students: Student[];
   printJobs: PrintJob[];
   projects: Project[];
+  loading: boolean;
   addTransaction: (transaction: Omit<Transaction, 'id' | 'createdAt'>) => void;
   deleteTransaction: (id: string) => void;
   addEmployee: (employee: Omit<Employee, 'id'>) => void;
@@ -27,119 +31,294 @@ interface FinanceContextType {
 
 const FinanceContext = createContext<FinanceContextType | undefined>(undefined);
 
-// Sample data
-const sampleTransactions: Transaction[] = [
-  { id: '1', type: 'expense', category: 'rent', amount: 2500, description: 'Office Rent - December', date: '2024-12-01', createdAt: '2024-12-01' },
-  { id: '2', type: 'expense', category: 'salary', amount: 8000, description: 'Monthly Payroll', date: '2024-12-01', createdAt: '2024-12-01' },
-  { id: '3', type: 'expense', category: 'marketing', amount: 1500, description: 'Google Ads Campaign', date: '2024-12-05', createdAt: '2024-12-05' },
-  { id: '4', type: 'income', category: 'courses', amount: 4500, description: 'Robotics Workshop Fees', date: '2024-12-03', createdAt: '2024-12-03' },
-  { id: '5', type: 'income', category: '3d-printing', amount: 800, description: '3D Print Orders', date: '2024-12-07', createdAt: '2024-12-07' },
-  { id: '6', type: 'income', category: 'school', amount: 3200, description: 'School Program Fees', date: '2024-12-10', createdAt: '2024-12-10' },
-  { id: '7', type: 'expense', category: 'stock', amount: 650, description: 'Arduino Components', date: '2024-12-08', createdAt: '2024-12-08' },
-  { id: '8', type: 'income', category: 'projects', amount: 2000, description: 'Custom Automation Project', date: '2024-12-12', createdAt: '2024-12-12' },
-];
-
-const sampleEmployees: Employee[] = [
-  { id: '1', name: 'John Smith', position: 'Lead Developer', salary: 5000, startDate: '2023-01-15' },
-  { id: '2', name: 'Sarah Johnson', position: 'Instructor', salary: 3000, startDate: '2023-06-01' },
-];
-
-const sampleComponents: Component[] = [
-  { id: '1', name: 'Arduino Uno R3', quantity: 25, unitPrice: 22, minStock: 10, category: 'Microcontrollers' },
-  { id: '2', name: 'ESP32 DevKit', quantity: 15, unitPrice: 12, minStock: 8, category: 'Microcontrollers' },
-  { id: '3', name: 'Servo Motor SG90', quantity: 50, unitPrice: 4, minStock: 20, category: 'Motors' },
-  { id: '4', name: 'Ultrasonic Sensor', quantity: 8, unitPrice: 3, minStock: 15, category: 'Sensors' },
-  { id: '5', name: 'LED Pack (100pcs)', quantity: 12, unitPrice: 8, minStock: 5, category: 'Electronics' },
-];
-
-const sampleStudents: Student[] = [
-  { id: '1', name: 'Alex Chen', email: 'alex@example.com', course: 'Robotics Fundamentals', batchId: 'B001', enrollmentDate: '2024-09-01', paymentStatus: 'paid' },
-  { id: '2', name: 'Maria Garcia', email: 'maria@example.com', course: 'Arduino Workshop', batchId: 'B002', enrollmentDate: '2024-10-15', paymentStatus: 'paid' },
-  { id: '3', name: 'James Wilson', email: 'james@example.com', course: 'Robotics Fundamentals', batchId: 'B001', enrollmentDate: '2024-09-01', paymentStatus: 'pending' },
-];
-
-const samplePrintJobs: PrintJob[] = [
-  { id: '1', name: 'Custom Enclosure', filamentUsed: 150, filamentCost: 4.5, laborHours: 2, hourlyRate: 25, electricityCost: 1.5, totalCost: 56, date: '2024-12-05' },
-  { id: '2', name: 'Robot Arm Parts', filamentUsed: 300, filamentCost: 9, laborHours: 5, hourlyRate: 25, electricityCost: 3, totalCost: 137, date: '2024-12-08' },
-];
-
-const sampleProjects: Project[] = [
-  { id: '1', name: 'Home Automation System', description: 'Smart home controller with sensors', totalCost: 450, totalIncome: 1200, hoursSpent: 40, status: 'completed', startDate: '2024-10-01' },
-  { id: '2', name: 'Industrial Monitoring', description: 'Factory sensor network', totalCost: 800, totalIncome: 0, hoursSpent: 25, status: 'active', startDate: '2024-11-15' },
-];
-
 export function FinanceProvider({ children }: { children: ReactNode }) {
-  const [transactions, setTransactions] = useState<Transaction[]>(sampleTransactions);
-  const [employees, setEmployees] = useState<Employee[]>(sampleEmployees);
-  const [components, setComponents] = useState<Component[]>(sampleComponents);
-  const [students, setStudents] = useState<Student[]>(sampleStudents);
-  const [printJobs, setPrintJobs] = useState<PrintJob[]>(samplePrintJobs);
-  const [projects, setProjects] = useState<Project[]>(sampleProjects);
+  const { user } = useAuth();
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [components, setComponents] = useState<Component[]>([]);
+  const [students, setStudents] = useState<Student[]>([]);
+  const [printJobs, setPrintJobs] = useState<PrintJob[]>([]);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const addTransaction = (transaction: Omit<Transaction, 'id' | 'createdAt'>) => {
-    const newTransaction: Transaction = {
-      ...transaction,
-      id: Date.now().toString(),
-      createdAt: new Date().toISOString(),
-    };
-    setTransactions(prev => [newTransaction, ...prev]);
+  const fetchData = useCallback(async () => {
+    if (!user) {
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const [txRes, empRes, compRes, studRes, printRes, projRes] = await Promise.all([
+        supabase.from('transactions').select('*').order('date', { ascending: false }),
+        supabase.from('employees').select('*').order('name'),
+        supabase.from('components').select('*').order('name'),
+        supabase.from('students').select('*').order('name'),
+        supabase.from('print_jobs').select('*').order('date', { ascending: false }),
+        supabase.from('projects').select('*').order('start_date', { ascending: false }),
+      ]);
+
+      if (txRes.data) setTransactions(txRes.data.map(t => ({
+        id: t.id,
+        type: t.type as 'income' | 'expense',
+        category: t.category as CategoryType,
+        amount: Number(t.amount),
+        description: t.description || '',
+        date: t.date,
+        createdAt: t.created_at,
+      })));
+
+      if (empRes.data) setEmployees(empRes.data.map(e => ({
+        id: e.id,
+        name: e.name,
+        position: e.position,
+        salary: Number(e.salary),
+        startDate: e.start_date,
+      })));
+
+      if (compRes.data) setComponents(compRes.data.map(c => ({
+        id: c.id,
+        name: c.name,
+        quantity: c.quantity,
+        unitPrice: Number(c.unit_price),
+        minStock: c.min_stock,
+        category: c.category || 'General',
+      })));
+
+      if (studRes.data) setStudents(studRes.data.map(s => ({
+        id: s.id,
+        name: s.name,
+        email: s.email || '',
+        course: s.course,
+        batchId: s.batch_id || '',
+        enrollmentDate: s.enrollment_date,
+        paymentStatus: s.payment_status as 'paid' | 'pending' | 'overdue',
+      })));
+
+      if (printRes.data) setPrintJobs(printRes.data.map(p => ({
+        id: p.id,
+        name: p.name,
+        filamentUsed: Number(p.filament_used),
+        filamentCost: Number(p.filament_cost),
+        laborHours: Number(p.labor_hours),
+        hourlyRate: Number(p.hourly_rate),
+        electricityCost: Number(p.electricity_cost),
+        totalCost: Number(p.total_cost),
+        date: p.date,
+      })));
+
+      if (projRes.data) setProjects(projRes.data.map(p => ({
+        id: p.id,
+        name: p.name,
+        description: p.description || '',
+        totalCost: Number(p.total_cost),
+        totalIncome: Number(p.total_income),
+        hoursSpent: Number(p.hours_spent),
+        status: p.status as 'active' | 'completed' | 'paused',
+        startDate: p.start_date,
+      })));
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  const addTransaction = async (transaction: Omit<Transaction, 'id' | 'createdAt'>) => {
+    if (!user) return;
+    const { error } = await supabase.from('transactions').insert({
+      user_id: user.id,
+      type: transaction.type,
+      category: transaction.category,
+      amount: transaction.amount,
+      description: transaction.description,
+      date: transaction.date,
+    });
+    if (error) {
+      toast.error('Failed to add transaction');
+    } else {
+      fetchData();
+    }
   };
 
-  const deleteTransaction = (id: string) => {
-    setTransactions(prev => prev.filter(t => t.id !== id));
+  const deleteTransaction = async (id: string) => {
+    const { error } = await supabase.from('transactions').delete().eq('id', id);
+    if (error) {
+      toast.error('Failed to delete transaction');
+    } else {
+      setTransactions(prev => prev.filter(t => t.id !== id));
+    }
   };
 
-  const addEmployee = (employee: Omit<Employee, 'id'>) => {
-    const newEmployee: Employee = { ...employee, id: Date.now().toString() };
-    setEmployees(prev => [...prev, newEmployee]);
+  const addEmployee = async (employee: Omit<Employee, 'id'>) => {
+    if (!user) return;
+    const { error } = await supabase.from('employees').insert({
+      user_id: user.id,
+      name: employee.name,
+      position: employee.position,
+      salary: employee.salary,
+      start_date: employee.startDate,
+    });
+    if (error) {
+      toast.error('Failed to add employee');
+    } else {
+      fetchData();
+    }
   };
 
-  const deleteEmployee = (id: string) => {
-    setEmployees(prev => prev.filter(e => e.id !== id));
+  const deleteEmployee = async (id: string) => {
+    const { error } = await supabase.from('employees').delete().eq('id', id);
+    if (error) {
+      toast.error('Failed to delete employee');
+    } else {
+      setEmployees(prev => prev.filter(e => e.id !== id));
+    }
   };
 
-  const addComponent = (component: Omit<Component, 'id'>) => {
-    const newComponent: Component = { ...component, id: Date.now().toString() };
-    setComponents(prev => [...prev, newComponent]);
+  const addComponent = async (component: Omit<Component, 'id'>) => {
+    if (!user) return;
+    const { error } = await supabase.from('components').insert({
+      user_id: user.id,
+      name: component.name,
+      quantity: component.quantity,
+      unit_price: component.unitPrice,
+      min_stock: component.minStock,
+      category: component.category,
+    });
+    if (error) {
+      toast.error('Failed to add component');
+    } else {
+      fetchData();
+    }
   };
 
-  const updateComponent = (id: string, updates: Partial<Component>) => {
-    setComponents(prev => prev.map(c => c.id === id ? { ...c, ...updates } : c));
+  const updateComponent = async (id: string, updates: Partial<Component>) => {
+    const dbUpdates: Record<string, unknown> = {};
+    if (updates.name !== undefined) dbUpdates.name = updates.name;
+    if (updates.quantity !== undefined) dbUpdates.quantity = updates.quantity;
+    if (updates.unitPrice !== undefined) dbUpdates.unit_price = updates.unitPrice;
+    if (updates.minStock !== undefined) dbUpdates.min_stock = updates.minStock;
+    if (updates.category !== undefined) dbUpdates.category = updates.category;
+
+    const { error } = await supabase.from('components').update(dbUpdates).eq('id', id);
+    if (error) {
+      toast.error('Failed to update component');
+    } else {
+      fetchData();
+    }
   };
 
-  const deleteComponent = (id: string) => {
-    setComponents(prev => prev.filter(c => c.id !== id));
+  const deleteComponent = async (id: string) => {
+    const { error } = await supabase.from('components').delete().eq('id', id);
+    if (error) {
+      toast.error('Failed to delete component');
+    } else {
+      setComponents(prev => prev.filter(c => c.id !== id));
+    }
   };
 
-  const addStudent = (student: Omit<Student, 'id'>) => {
-    const newStudent: Student = { ...student, id: Date.now().toString() };
-    setStudents(prev => [...prev, newStudent]);
+  const addStudent = async (student: Omit<Student, 'id'>) => {
+    if (!user) return;
+    const { error } = await supabase.from('students').insert({
+      user_id: user.id,
+      name: student.name,
+      email: student.email,
+      course: student.course,
+      batch_id: student.batchId,
+      enrollment_date: student.enrollmentDate,
+      payment_status: student.paymentStatus,
+    });
+    if (error) {
+      toast.error('Failed to add student');
+    } else {
+      fetchData();
+    }
   };
 
-  const deleteStudent = (id: string) => {
-    setStudents(prev => prev.filter(s => s.id !== id));
+  const deleteStudent = async (id: string) => {
+    const { error } = await supabase.from('students').delete().eq('id', id);
+    if (error) {
+      toast.error('Failed to delete student');
+    } else {
+      setStudents(prev => prev.filter(s => s.id !== id));
+    }
   };
 
-  const addPrintJob = (job: Omit<PrintJob, 'id'>) => {
-    const newJob: PrintJob = { ...job, id: Date.now().toString() };
-    setPrintJobs(prev => [...prev, newJob]);
+  const addPrintJob = async (job: Omit<PrintJob, 'id'>) => {
+    if (!user) return;
+    const { error } = await supabase.from('print_jobs').insert({
+      user_id: user.id,
+      name: job.name,
+      filament_used: job.filamentUsed,
+      filament_cost: job.filamentCost,
+      labor_hours: job.laborHours,
+      hourly_rate: job.hourlyRate,
+      electricity_cost: job.electricityCost,
+      total_cost: job.totalCost,
+      date: job.date,
+    });
+    if (error) {
+      toast.error('Failed to add print job');
+    } else {
+      fetchData();
+    }
   };
 
-  const deletePrintJob = (id: string) => {
-    setPrintJobs(prev => prev.filter(j => j.id !== id));
+  const deletePrintJob = async (id: string) => {
+    const { error } = await supabase.from('print_jobs').delete().eq('id', id);
+    if (error) {
+      toast.error('Failed to delete print job');
+    } else {
+      setPrintJobs(prev => prev.filter(j => j.id !== id));
+    }
   };
 
-  const addProject = (project: Omit<Project, 'id'>) => {
-    const newProject: Project = { ...project, id: Date.now().toString() };
-    setProjects(prev => [...prev, newProject]);
+  const addProject = async (project: Omit<Project, 'id'>) => {
+    if (!user) return;
+    const { error } = await supabase.from('projects').insert({
+      user_id: user.id,
+      name: project.name,
+      description: project.description,
+      total_cost: project.totalCost,
+      total_income: project.totalIncome,
+      hours_spent: project.hoursSpent,
+      status: project.status,
+      start_date: project.startDate,
+    });
+    if (error) {
+      toast.error('Failed to add project');
+    } else {
+      fetchData();
+    }
   };
 
-  const updateProject = (id: string, updates: Partial<Project>) => {
-    setProjects(prev => prev.map(p => p.id === id ? { ...p, ...updates } : p));
+  const updateProject = async (id: string, updates: Partial<Project>) => {
+    const dbUpdates: Record<string, unknown> = {};
+    if (updates.name !== undefined) dbUpdates.name = updates.name;
+    if (updates.description !== undefined) dbUpdates.description = updates.description;
+    if (updates.totalCost !== undefined) dbUpdates.total_cost = updates.totalCost;
+    if (updates.totalIncome !== undefined) dbUpdates.total_income = updates.totalIncome;
+    if (updates.hoursSpent !== undefined) dbUpdates.hours_spent = updates.hoursSpent;
+    if (updates.status !== undefined) dbUpdates.status = updates.status;
+
+    const { error } = await supabase.from('projects').update(dbUpdates).eq('id', id);
+    if (error) {
+      toast.error('Failed to update project');
+    } else {
+      fetchData();
+    }
   };
 
-  const deleteProject = (id: string) => {
-    setProjects(prev => prev.filter(p => p.id !== id));
+  const deleteProject = async (id: string) => {
+    const { error } = await supabase.from('projects').delete().eq('id', id);
+    if (error) {
+      toast.error('Failed to delete project');
+    } else {
+      setProjects(prev => prev.filter(p => p.id !== id));
+    }
   };
 
   const getSummary = (): DashboardSummary => {
@@ -177,6 +356,7 @@ export function FinanceProvider({ children }: { children: ReactNode }) {
       students,
       printJobs,
       projects,
+      loading,
       addTransaction,
       deleteTransaction,
       addEmployee,

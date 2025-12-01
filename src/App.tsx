@@ -3,8 +3,11 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "@/context/AuthContext";
 import { FinanceProvider } from "@/context/FinanceContext";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
+import AuthPage from "./pages/AuthPage";
 import RentPage from "./pages/RentPage";
 import SalaryPage from "./pages/SalaryPage";
 import MarketingPage from "./pages/MarketingPage";
@@ -21,25 +24,28 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <FinanceProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/rent" element={<RentPage />} />
-            <Route path="/salary" element={<SalaryPage />} />
-            <Route path="/marketing" element={<MarketingPage />} />
-            <Route path="/expenses" element={<ExpensesPage />} />
-            <Route path="/stock" element={<StockPage />} />
-            <Route path="/3d-printing" element={<PrintingPage />} />
-            <Route path="/courses" element={<CoursesPage />} />
-            <Route path="/school" element={<SchoolPage />} />
-            <Route path="/projects" element={<ProjectsPage />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </FinanceProvider>
+      <AuthProvider>
+        <FinanceProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/auth" element={<AuthPage />} />
+              <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
+              <Route path="/rent" element={<ProtectedRoute><RentPage /></ProtectedRoute>} />
+              <Route path="/salary" element={<ProtectedRoute><SalaryPage /></ProtectedRoute>} />
+              <Route path="/marketing" element={<ProtectedRoute><MarketingPage /></ProtectedRoute>} />
+              <Route path="/expenses" element={<ProtectedRoute><ExpensesPage /></ProtectedRoute>} />
+              <Route path="/stock" element={<ProtectedRoute><StockPage /></ProtectedRoute>} />
+              <Route path="/3d-printing" element={<ProtectedRoute><PrintingPage /></ProtectedRoute>} />
+              <Route path="/courses" element={<ProtectedRoute><CoursesPage /></ProtectedRoute>} />
+              <Route path="/school" element={<ProtectedRoute><SchoolPage /></ProtectedRoute>} />
+              <Route path="/projects" element={<ProtectedRoute><ProjectsPage /></ProtectedRoute>} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </FinanceProvider>
+      </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );

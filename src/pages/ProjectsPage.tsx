@@ -29,7 +29,7 @@ export default function ProjectsPage() {
     totalCost: '',
     totalIncome: '',
     hoursSpent: '',
-    status: 'active' as 'active' | 'completed' | 'on-hold',
+    status: 'active' as 'active' | 'completed' | 'paused',
   });
 
   const projectTransactions = transactions.filter(t => t.category === 'projects');
@@ -70,7 +70,7 @@ export default function ProjectsPage() {
     switch (status) {
       case 'active': return 'bg-income-bg text-income';
       case 'completed': return 'bg-primary/10 text-primary';
-      case 'on-hold': return 'bg-warning/10 text-warning';
+      case 'paused': return 'bg-warning/10 text-warning';
       default: return '';
     }
   };
@@ -272,7 +272,7 @@ export default function ProjectsPage() {
                 <Label htmlFor="status">Status</Label>
                 <Select 
                   value={newProject.status} 
-                  onValueChange={(value) => setNewProject({ ...newProject, status: value as 'active' | 'completed' | 'on-hold' })}
+                  onValueChange={(value) => setNewProject({ ...newProject, status: value as 'active' | 'completed' | 'paused' })}
                 >
                   <SelectTrigger>
                     <SelectValue />
@@ -280,7 +280,7 @@ export default function ProjectsPage() {
                   <SelectContent>
                     <SelectItem value="active">Active</SelectItem>
                     <SelectItem value="completed">Completed</SelectItem>
-                    <SelectItem value="on-hold">On Hold</SelectItem>
+                    <SelectItem value="paused">Paused</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
