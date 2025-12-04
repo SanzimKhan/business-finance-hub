@@ -10,6 +10,8 @@ export type CategoryType =
   | 'courses'
   | 'school'
   | 'projects'
+  | 'utilities'
+  | 'transfer'
   | 'other';
 
 export interface Transaction {
@@ -84,4 +86,8 @@ export interface DashboardSummary {
   coursesRevenue: number;
   schoolRevenue: number;
   projectsProfit: number;
+  utilitiesTotal: number;
+  transferTotal: number;
+  monthlyIncome: number;
+  monthlyExpense: number;
 }

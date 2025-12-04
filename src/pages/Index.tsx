@@ -9,7 +9,7 @@ import {
   LayoutDashboard,
   TrendingUp,
   TrendingDown,
-  DollarSign,
+  Banknote,
   Home,
   Users,
   Megaphone,
@@ -18,6 +18,9 @@ import {
   GraduationCap,
   School,
   Briefcase,
+  Zap,
+  ArrowLeftRight,
+  Calendar,
 } from 'lucide-react';
 
 export default function Dashboard() {
@@ -38,42 +41,72 @@ export default function Dashboard() {
         onAddExpense={() => setExpenseModalOpen(true)}
       />
 
+      {/* Monthly Summary */}
+      <div className="mb-8">
+        <h2 className="mb-4 text-lg font-semibold flex items-center gap-2">
+          <Calendar className="h-5 w-5" />
+          This Month's Summary
+        </h2>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <StatCard
+            title="Monthly Income"
+            value={summary.monthlyIncome}
+            icon={<TrendingUp className="h-6 w-6" />}
+            variant="income"
+          />
+          <StatCard
+            title="Monthly Expenses"
+            value={summary.monthlyExpense}
+            icon={<TrendingDown className="h-6 w-6" />}
+            variant="expense"
+          />
+          <StatCard
+            title="Monthly Profit"
+            value={summary.monthlyIncome - summary.monthlyExpense}
+            icon={<Banknote className="h-6 w-6" />}
+            variant={(summary.monthlyIncome - summary.monthlyExpense) >= 0 ? 'income' : 'expense'}
+          />
+          <StatCard
+            title="Stock Value"
+            value={summary.stockValue}
+            icon={<Package className="h-6 w-6" />}
+          />
+        </div>
+      </div>
+
       {/* Main Stats */}
-      <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard
-          title="Total Income"
-          value={summary.totalIncome}
-          icon={<TrendingUp className="h-6 w-6" />}
-          trend="up"
-          trendValue="+12%"
-          variant="income"
-        />
-        <StatCard
-          title="Total Expenses"
-          value={summary.totalExpense}
-          icon={<TrendingDown className="h-6 w-6" />}
-          trend="down"
-          trendValue="+5%"
-          variant="expense"
-        />
-        <StatCard
-          title="Net Profit"
-          value={summary.profit}
-          icon={<DollarSign className="h-6 w-6" />}
-          trend={summary.profit >= 0 ? 'up' : 'down'}
-          trendValue={summary.profit >= 0 ? '+8%' : '-3%'}
-          variant={summary.profit >= 0 ? 'income' : 'expense'}
-        />
-        <StatCard
-          title="Stock Value"
-          value={summary.stockValue}
-          icon={<Package className="h-6 w-6" />}
-        />
+      <div className="mb-8">
+        <h2 className="mb-4 text-lg font-semibold">All-Time Summary</h2>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <StatCard
+            title="Total Income"
+            value={summary.totalIncome}
+            icon={<TrendingUp className="h-6 w-6" />}
+            variant="income"
+          />
+          <StatCard
+            title="Total Expenses"
+            value={summary.totalExpense}
+            icon={<TrendingDown className="h-6 w-6" />}
+            variant="expense"
+          />
+          <StatCard
+            title="Net Profit"
+            value={summary.profit}
+            icon={<Banknote className="h-6 w-6" />}
+            variant={summary.profit >= 0 ? 'income' : 'expense'}
+          />
+          <StatCard
+            title="Total Transfers"
+            value={summary.transferTotal}
+            icon={<ArrowLeftRight className="h-6 w-6" />}
+          />
+        </div>
       </div>
 
       {/* Category Breakdown */}
       <div className="mb-8">
-        <h2 className="mb-4 text-lg font-semibold">Monthly Breakdown</h2>
+        <h2 className="mb-4 text-lg font-semibold">Category Breakdown</h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           <StatCard
             title="Rent Costs"
@@ -91,6 +124,12 @@ export default function Dashboard() {
             title="Marketing Spend"
             value={summary.marketingTotal}
             icon={<Megaphone className="h-5 w-5" />}
+            variant="expense"
+          />
+          <StatCard
+            title="Utilities"
+            value={summary.utilitiesTotal}
+            icon={<Zap className="h-5 w-5" />}
             variant="expense"
           />
           <StatCard

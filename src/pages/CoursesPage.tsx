@@ -12,7 +12,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { GraduationCap, Users, DollarSign, UserPlus, Trash2 } from 'lucide-react';
+import { GraduationCap, Users, Banknote, UserPlus, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 
@@ -89,7 +89,7 @@ export default function CoursesPage() {
         <StatCard
           title="Course Revenue"
           value={totalRevenue}
-          icon={<DollarSign className="h-5 w-5" />}
+          icon={<Banknote className="h-5 w-5" />}
           variant="income"
         />
         <StatCard
