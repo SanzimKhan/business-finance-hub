@@ -22,6 +22,8 @@ const categories: { value: CategoryType; label: string }[] = [
   { value: 'rent', label: 'Rent' },
   { value: 'salary', label: 'Salary' },
   { value: 'marketing', label: 'Marketing' },
+  { value: 'utilities', label: 'Utilities' },
+  { value: 'transfer', label: 'Transfer' },
   { value: 'general', label: 'General' },
   { value: 'stock', label: 'Components Stock' },
   { value: '3d-printing', label: '3D Printing' },

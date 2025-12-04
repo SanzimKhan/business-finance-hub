@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Users, DollarSign, UserPlus, Trash2 } from 'lucide-react';
+import { Users, Banknote, UserPlus, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function SalaryPage() {
@@ -53,7 +53,7 @@ export default function SalaryPage() {
   };
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
+    return new Intl.NumberFormat('en-BD', { style: 'currency', currency: 'BDT' }).format(amount);
   };
 
   return (
@@ -81,13 +81,13 @@ export default function SalaryPage() {
         <StatCard
           title="Monthly Payroll"
           value={totalPayroll}
-          icon={<DollarSign className="h-5 w-5" />}
+          icon={<Banknote className="h-5 w-5" />}
           variant="expense"
         />
         <StatCard
           title="Total Salary Paid"
           value={totalSalary}
-          icon={<DollarSign className="h-5 w-5" />}
+          icon={<Banknote className="h-5 w-5" />}
           variant="expense"
         />
       </div>
@@ -186,7 +186,7 @@ export default function SalaryPage() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="salary">Monthly Salary ($)</Label>
+              <Label htmlFor="salary">Monthly Salary (৳)</Label>
               <Input
                 id="salary"
                 type="number"

@@ -322,11 +322,23 @@ export function FinanceProvider({ children }: { children: ReactNode }) {
   };
 
   const getSummary = (): DashboardSummary => {
+    const currentMonth = new Date().getMonth();
+    const currentYear = new Date().getFullYear();
+    
+    const monthlyTransactions = transactions.filter(t => {
+      const date = new Date(t.date);
+      return date.getMonth() === currentMonth && date.getFullYear() === currentYear;
+    });
+    
     const totalIncome = transactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
     const totalExpense = transactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
+    const monthlyIncome = monthlyTransactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
+    const monthlyExpense = monthlyTransactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
     const rentTotal = transactions.filter(t => t.category === 'rent').reduce((sum, t) => sum + t.amount, 0);
     const salaryTotal = transactions.filter(t => t.category === 'salary').reduce((sum, t) => sum + t.amount, 0);
     const marketingTotal = transactions.filter(t => t.category === 'marketing').reduce((sum, t) => sum + t.amount, 0);
+    const utilitiesTotal = transactions.filter(t => t.category === 'utilities').reduce((sum, t) => sum + t.amount, 0);
+    const transferTotal = transactions.filter(t => t.category === 'transfer').reduce((sum, t) => sum + t.amount, 0);
     const stockValue = components.reduce((sum, c) => sum + (c.quantity * c.unitPrice), 0);
     const printJobsRevenue = transactions.filter(t => t.category === '3d-printing' && t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
     const coursesRevenue = transactions.filter(t => t.category === 'courses' && t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
@@ -345,6 +357,10 @@ export function FinanceProvider({ children }: { children: ReactNode }) {
       coursesRevenue,
       schoolRevenue,
       projectsProfit,
+      utilitiesTotal,
+      transferTotal,
+      monthlyIncome,
+      monthlyExpense,
     };
   };
 
