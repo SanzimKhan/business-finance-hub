@@ -6,117 +6,117 @@
 
 @layer base {
   :root {
-    --background: 222 47% 97%;
-    --foreground: 222 47% 11%;
+    --background: 220 14% 96%;
+    --foreground: 220 14% 10%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+    --card-foreground: 220 14% 10%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+    --popover-foreground: 220 14% 10%;
 
-    --primary: 222 47% 20%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 220 14% 20%;
+    --primary-foreground: 220 14% 98%;
 
-    --secondary: 215 25% 93%;
-    --secondary-foreground: 222 47% 20%;
+    --secondary: 220 10% 90%;
+    --secondary-foreground: 220 14% 20%;
 
-    --muted: 215 25% 93%;
-    --muted-foreground: 215 16% 47%;
+    --muted: 220 10% 92%;
+    --muted-foreground: 220 10% 45%;
 
-    --accent: 160 84% 39%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 220 14% 30%;
+    --accent-foreground: 220 14% 98%;
 
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
 
-    --success: 160 84% 39%;
+    --success: 142 71% 45%;
     --success-foreground: 0 0% 100%;
 
     --warning: 38 92% 50%;
     --warning-foreground: 0 0% 100%;
 
-    --income: 160 84% 39%;
-    --income-foreground: 160 84% 15%;
-    --income-bg: 160 84% 95%;
+    --income: 142 71% 45%;
+    --income-foreground: 142 71% 15%;
+    --income-bg: 142 71% 95%;
 
-    --expense: 0 84% 60%;
-    --expense-foreground: 0 84% 30%;
-    --expense-bg: 0 84% 97%;
+    --expense: 0 72% 51%;
+    --expense-foreground: 0 72% 30%;
+    --expense-bg: 0 72% 97%;
 
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 222 47% 20%;
+    --border: 220 13% 88%;
+    --input: 220 13% 88%;
+    --ring: 220 14% 30%;
 
     --radius: 0.75rem;
 
-    --sidebar-background: 222 47% 11%;
-    --sidebar-foreground: 215 25% 85%;
-    --sidebar-primary: 160 84% 39%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 222 47% 18%;
-    --sidebar-accent-foreground: 215 25% 93%;
-    --sidebar-border: 222 47% 18%;
-    --sidebar-ring: 160 84% 39%;
+    --sidebar-background: 220 14% 12%;
+    --sidebar-foreground: 220 10% 75%;
+    --sidebar-primary: 220 14% 98%;
+    --sidebar-primary-foreground: 220 14% 12%;
+    --sidebar-accent: 220 14% 18%;
+    --sidebar-accent-foreground: 220 10% 90%;
+    --sidebar-border: 220 14% 18%;
+    --sidebar-ring: 220 14% 50%;
 
-    --chart-1: 160 84% 39%;
-    --chart-2: 222 47% 50%;
+    --chart-1: 220 14% 35%;
+    --chart-2: 220 14% 50%;
     --chart-3: 38 92% 50%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 0 84% 60%;
+    --chart-4: 280 45% 50%;
+    --chart-5: 0 72% 51%;
   }
 
   .dark {
-    --background: 222 47% 6%;
-    --foreground: 210 40% 98%;
+    --background: 220 14% 8%;
+    --foreground: 220 10% 95%;
 
-    --card: 222 47% 9%;
-    --card-foreground: 210 40% 98%;
+    --card: 220 14% 12%;
+    --card-foreground: 220 10% 95%;
 
-    --popover: 222 47% 9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 220 14% 12%;
+    --popover-foreground: 220 10% 95%;
 
-    --primary: 160 84% 45%;
-    --primary-foreground: 222 47% 11%;
+    --primary: 220 10% 90%;
+    --primary-foreground: 220 14% 12%;
 
-    --secondary: 222 47% 15%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 220 14% 18%;
+    --secondary-foreground: 220 10% 90%;
 
-    --muted: 222 47% 15%;
-    --muted-foreground: 215 20% 65%;
+    --muted: 220 14% 18%;
+    --muted-foreground: 220 10% 55%;
 
-    --accent: 160 84% 39%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 220 14% 25%;
+    --accent-foreground: 220 10% 95%;
 
     --destructive: 0 62% 45%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 0 0% 100%;
 
-    --success: 160 84% 39%;
+    --success: 142 71% 45%;
     --success-foreground: 0 0% 100%;
 
     --warning: 38 92% 50%;
     --warning-foreground: 0 0% 100%;
 
-    --income: 160 84% 45%;
-    --income-foreground: 160 84% 85%;
-    --income-bg: 160 84% 15%;
+    --income: 142 71% 45%;
+    --income-foreground: 142 71% 85%;
+    --income-bg: 142 71% 15%;
 
-    --expense: 0 84% 55%;
-    --expense-foreground: 0 84% 85%;
-    --expense-bg: 0 84% 15%;
+    --expense: 0 72% 55%;
+    --expense-foreground: 0 72% 85%;
+    --expense-bg: 0 72% 15%;
 
-    --border: 222 47% 18%;
-    --input: 222 47% 18%;
-    --ring: 160 84% 45%;
+    --border: 220 14% 20%;
+    --input: 220 14% 20%;
+    --ring: 220 14% 50%;
 
-    --sidebar-background: 222 47% 6%;
-    --sidebar-foreground: 215 25% 85%;
-    --sidebar-primary: 160 84% 45%;
-    --sidebar-primary-foreground: 222 47% 11%;
-    --sidebar-accent: 222 47% 12%;
-    --sidebar-accent-foreground: 215 25% 93%;
-    --sidebar-border: 222 47% 12%;
-    --sidebar-ring: 160 84% 45%;
+    --sidebar-background: 220 14% 6%;
+    --sidebar-foreground: 220 10% 75%;
+    --sidebar-primary: 220 10% 95%;
+    --sidebar-primary-foreground: 220 14% 8%;
+    --sidebar-accent: 220 14% 14%;
+    --sidebar-accent-foreground: 220 10% 90%;
+    --sidebar-border: 220 14% 14%;
+    --sidebar-ring: 220 14% 50%;
   }
 }
 
@@ -136,11 +136,11 @@
 
 @layer utilities {
   .gradient-primary {
-    background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(222 47% 30%) 100%);
+    background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(220 14% 30%) 100%);
   }
 
   .gradient-accent {
-    background: linear-gradient(135deg, hsl(var(--accent)) 0%, hsl(160 84% 30%) 100%);
+    background: linear-gradient(135deg, hsl(var(--accent)) 0%, hsl(220 14% 40%) 100%);
   }
 
   .gradient-card {
