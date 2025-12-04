@@ -7,7 +7,8 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
-import { Loader2, DollarSign } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
+import botEngineersLogo from '@/assets/bot-engineers-logo.png';
 
 export default function AuthPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -77,18 +78,19 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
+    <div className="min-h-screen bg-[hsl(220,14%,12%)] flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-        <div className="flex items-center justify-center gap-3 mb-8">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary">
-            <DollarSign className="h-7 w-7 text-primary-foreground" />
-          </div>
-          <h1 className="text-2xl font-bold">FinanceHub</h1>
+        <div className="flex items-center justify-center mb-8">
+          <img 
+            src={botEngineersLogo} 
+            alt="Bot Engineers" 
+            className="h-16 w-auto"
+          />
         </div>
 
-        <Card className="border-border/50 shadow-xl">
+        <Card className="border-border/30 shadow-2xl bg-card/95 backdrop-blur">
           <CardHeader className="text-center">
-            <CardTitle>Welcome</CardTitle>
+            <CardTitle className="text-foreground">Welcome</CardTitle>
             <CardDescription>Sign in to manage your finances</CardDescription>
           </CardHeader>
           <CardContent>

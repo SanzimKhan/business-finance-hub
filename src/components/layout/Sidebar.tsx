@@ -19,6 +19,7 @@ import {
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import botEngineersLogo from '@/assets/bot-engineers-logo.png';
 
 const navItems = [
   { path: '/', label: 'Dashboard', icon: LayoutDashboard },
@@ -57,16 +58,19 @@ export function Sidebar() {
         )}>
           {!collapsed && (
             <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-sidebar-primary">
-                <span className="text-lg font-bold text-sidebar-primary-foreground">F</span>
-              </div>
-              <span className="text-lg font-semibold text-sidebar-foreground">FinanceHub</span>
+              <img 
+                src={botEngineersLogo} 
+                alt="Bot Engineers" 
+                className="h-8 w-auto"
+              />
             </div>
           )}
           {collapsed && (
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-sidebar-primary">
-              <span className="text-lg font-bold text-sidebar-primary-foreground">F</span>
-            </div>
+            <img 
+              src={botEngineersLogo} 
+              alt="Bot Engineers" 
+              className="h-7 w-auto"
+            />
           )}
         </div>
 
