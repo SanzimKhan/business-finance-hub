@@ -15,6 +15,7 @@ import {
   LogOut,
   ChevronLeft,
   ChevronRight,
+  Calendar,
 } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -23,6 +24,7 @@ import botEngineersLogo from '@/assets/bot-engineers-logo.png';
 
 const navItems = [
   { path: '/', label: 'Dashboard', icon: LayoutDashboard },
+  { path: '/monthly', label: 'Monthly Entry', icon: Calendar },
   { path: '/rent', label: 'Rent', icon: Home },
   { path: '/salary', label: 'Salary', icon: Users },
   { path: '/marketing', label: 'Marketing', icon: Megaphone },
