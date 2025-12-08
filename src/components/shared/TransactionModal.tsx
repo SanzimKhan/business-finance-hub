@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -16,6 +16,8 @@ interface TransactionModalProps {
   defaultType?: TransactionType;
   defaultCategory?: CategoryType;
   title?: string;
+  defaultMonth?: number;
+  defaultYear?: number;
 }
 
 const categories: { value: CategoryType; label: string }[] = [
@@ -57,14 +59,24 @@ export function TransactionModal({
   defaultType = 'expense',
   defaultCategory = 'general',
   title,
+  defaultMonth,
+  defaultYear,
 }: TransactionModalProps) {
   const { addTransaction } = useFinance();
   const [type, setType] = useState<TransactionType>(defaultType);
   const [category, setCategory] = useState<CategoryType>(defaultCategory);
   const [amount, setAmount] = useState('');
   const [description, setDescription] = useState('');
-  const [selectedMonth, setSelectedMonth] = useState((new Date().getMonth() + 1).toString().padStart(2, '0'));
-  const [selectedYear, setSelectedYear] = useState(currentYear.toString());
+  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+
+  // Update date when defaultMonth/defaultYear changes
+  useEffect(() => {
+    if (defaultMonth !== undefined && defaultYear !== undefined) {
+      const month = (defaultMonth + 1).toString().padStart(2, '0');
+      const day = new Date().getDate().toString().padStart(2, '0');
+      setDate(`${defaultYear}-${month}-${day}`);
+    }
+  }, [defaultMonth, defaultYear, open]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -73,9 +85,6 @@ export function TransactionModal({
       toast.error('Please enter a valid amount');
       return;
     }
-
-    // Create date from selected month/year (first day of month)
-    const date = `${selectedYear}-${selectedMonth}-01`;
 
     addTransaction({
       type,
@@ -90,8 +99,7 @@ export function TransactionModal({
     // Reset form
     setAmount('');
     setDescription('');
-    setSelectedMonth((new Date().getMonth() + 1).toString().padStart(2, '0'));
-    setSelectedYear(currentYear.toString());
+    setDate(new Date().toISOString().split('T')[0]);
     onOpenChange(false);
   };
 
@@ -159,35 +167,16 @@ export function TransactionModal({
             </Select>
           </div>
 
-          {/* Month & Year Selection */}
+          {/* Date */}
           <div className="space-y-2">
-            <Label>Month & Year</Label>
-            <div className="flex gap-2">
-              <Select value={selectedMonth} onValueChange={setSelectedMonth}>
-                <SelectTrigger className="flex-1">
-                  <SelectValue placeholder="Month" />
-                </SelectTrigger>
-                <SelectContent>
-                  {months.map((month) => (
-                    <SelectItem key={month.value} value={month.value}>
-                      {month.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <Select value={selectedYear} onValueChange={setSelectedYear}>
-                <SelectTrigger className="w-28">
-                  <SelectValue placeholder="Year" />
-                </SelectTrigger>
-                <SelectContent>
-                  {years.map((year) => (
-                    <SelectItem key={year} value={year}>
-                      {year}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+            <Label htmlFor="date">Date</Label>
+            <Input
+              id="date"
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              required
+            />
           </div>
 
           {/* Description */}

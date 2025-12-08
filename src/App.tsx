@@ -17,6 +17,7 @@ import PrintingPage from "./pages/PrintingPage";
 import CoursesPage from "./pages/CoursesPage";
 import SchoolPage from "./pages/SchoolPage";
 import ProjectsPage from "./pages/ProjectsPage";
+import MonthlyEntryPage from "./pages/MonthlyEntryPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -41,6 +42,7 @@ const App = () => (
               <Route path="/courses" element={<ProtectedRoute><CoursesPage /></ProtectedRoute>} />
               <Route path="/school" element={<ProtectedRoute><SchoolPage /></ProtectedRoute>} />
               <Route path="/projects" element={<ProtectedRoute><ProjectsPage /></ProtectedRoute>} />
+              <Route path="/monthly" element={<ProtectedRoute><MonthlyEntryPage /></ProtectedRoute>} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
