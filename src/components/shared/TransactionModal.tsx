@@ -33,6 +33,24 @@ const categories: { value: CategoryType; label: string }[] = [
   { value: 'other', label: 'Other' },
 ];
 
+const months = [
+  { value: '01', label: 'January' },
+  { value: '02', label: 'February' },
+  { value: '03', label: 'March' },
+  { value: '04', label: 'April' },
+  { value: '05', label: 'May' },
+  { value: '06', label: 'June' },
+  { value: '07', label: 'July' },
+  { value: '08', label: 'August' },
+  { value: '09', label: 'September' },
+  { value: '10', label: 'October' },
+  { value: '11', label: 'November' },
+  { value: '12', label: 'December' },
+];
+
+const currentYear = new Date().getFullYear();
+const years = Array.from({ length: 10 }, (_, i) => (currentYear - 5 + i).toString());
+
 export function TransactionModal({
   open,
   onOpenChange,
@@ -45,7 +63,8 @@ export function TransactionModal({
   const [category, setCategory] = useState<CategoryType>(defaultCategory);
   const [amount, setAmount] = useState('');
   const [description, setDescription] = useState('');
-  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+  const [selectedMonth, setSelectedMonth] = useState((new Date().getMonth() + 1).toString().padStart(2, '0'));
+  const [selectedYear, setSelectedYear] = useState(currentYear.toString());
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,6 +73,9 @@ export function TransactionModal({
       toast.error('Please enter a valid amount');
       return;
     }
+
+    // Create date from selected month/year (first day of month)
+    const date = `${selectedYear}-${selectedMonth}-01`;
 
     addTransaction({
       type,
@@ -68,7 +90,8 @@ export function TransactionModal({
     // Reset form
     setAmount('');
     setDescription('');
-    setDate(new Date().toISOString().split('T')[0]);
+    setSelectedMonth((new Date().getMonth() + 1).toString().padStart(2, '0'));
+    setSelectedYear(currentYear.toString());
     onOpenChange(false);
   };
 
@@ -136,16 +159,35 @@ export function TransactionModal({
             </Select>
           </div>
 
-          {/* Date */}
+          {/* Month & Year Selection */}
           <div className="space-y-2">
-            <Label htmlFor="date">Date</Label>
-            <Input
-              id="date"
-              type="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-              required
-            />
+            <Label>Month & Year</Label>
+            <div className="flex gap-2">
+              <Select value={selectedMonth} onValueChange={setSelectedMonth}>
+                <SelectTrigger className="flex-1">
+                  <SelectValue placeholder="Month" />
+                </SelectTrigger>
+                <SelectContent>
+                  {months.map((month) => (
+                    <SelectItem key={month.value} value={month.value}>
+                      {month.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Select value={selectedYear} onValueChange={setSelectedYear}>
+                <SelectTrigger className="w-28">
+                  <SelectValue placeholder="Year" />
+                </SelectTrigger>
+                <SelectContent>
+                  {years.map((year) => (
+                    <SelectItem key={year} value={year}>
+                      {year}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           {/* Description */}
