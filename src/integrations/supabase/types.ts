@@ -77,6 +77,57 @@ export type Database = {
         }
         Relationships: []
       }
+      loans: {
+        Row: {
+          created_at: string
+          emi_amount: number
+          id: string
+          interest_rate: number
+          lender: string | null
+          name: string
+          notes: string | null
+          paid_emi_count: number
+          principal_amount: number
+          start_date: string
+          status: string
+          total_emi_count: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          emi_amount?: number
+          id?: string
+          interest_rate?: number
+          lender?: string | null
+          name: string
+          notes?: string | null
+          paid_emi_count?: number
+          principal_amount: number
+          start_date?: string
+          status?: string
+          total_emi_count?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          emi_amount?: number
+          id?: string
+          interest_rate?: number
+          lender?: string | null
+          name?: string
+          notes?: string | null
+          paid_emi_count?: number
+          principal_amount?: number
+          start_date?: string
+          status?: string
+          total_emi_count?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       print_jobs: {
         Row: {
           created_at: string
@@ -181,6 +232,89 @@ export type Database = {
           status?: string
           total_cost?: number
           total_income?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      shareholder_investments: {
+        Row: {
+          amount: number
+          created_at: string
+          description: string | null
+          id: string
+          investment_date: string
+          shareholder_id: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          description?: string | null
+          id?: string
+          investment_date?: string
+          shareholder_id: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          description?: string | null
+          id?: string
+          investment_date?: string
+          shareholder_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shareholder_investments_shareholder_id_fkey"
+            columns: ["shareholder_id"]
+            isOneToOne: false
+            referencedRelation: "shareholders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      shareholders: {
+        Row: {
+          can_edit: boolean
+          created_at: string
+          designation: string
+          email: string | null
+          id: string
+          name: string
+          ownership_percentage: number
+          phone: string | null
+          photo_url: string | null
+          total_invested: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          can_edit?: boolean
+          created_at?: string
+          designation: string
+          email?: string | null
+          id?: string
+          name: string
+          ownership_percentage?: number
+          phone?: string | null
+          photo_url?: string | null
+          total_invested?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          can_edit?: boolean
+          created_at?: string
+          designation?: string
+          email?: string | null
+          id?: string
+          name?: string
+          ownership_percentage?: number
+          phone?: string | null
+          photo_url?: string | null
+          total_invested?: number
+          updated_at?: string
           user_id?: string
         }
         Relationships: []

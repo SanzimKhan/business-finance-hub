@@ -18,6 +18,10 @@ import CoursesPage from "./pages/CoursesPage";
 import SchoolPage from "./pages/SchoolPage";
 import ProjectsPage from "./pages/ProjectsPage";
 import MonthlyEntryPage from "./pages/MonthlyEntryPage";
+import ShareholdersPage from "./pages/ShareholdersPage";
+import LoansPage from "./pages/LoansPage";
+import PredictionsPage from "./pages/PredictionsPage";
+import EcosystemPage from "./pages/EcosystemPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -43,6 +47,10 @@ const App = () => (
               <Route path="/school" element={<ProtectedRoute><SchoolPage /></ProtectedRoute>} />
               <Route path="/projects" element={<ProtectedRoute><ProjectsPage /></ProtectedRoute>} />
               <Route path="/monthly" element={<ProtectedRoute><MonthlyEntryPage /></ProtectedRoute>} />
+              <Route path="/shareholders" element={<ProtectedRoute><ShareholdersPage /></ProtectedRoute>} />
+              <Route path="/loans" element={<ProtectedRoute><LoansPage /></ProtectedRoute>} />
+              <Route path="/predictions" element={<ProtectedRoute><PredictionsPage /></ProtectedRoute>} />
+              <Route path="/ecosystem" element={<ProtectedRoute><EcosystemPage /></ProtectedRoute>} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>

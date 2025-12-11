@@ -1,1 +1,4 @@
 project_id = "atnrwelueshykionjlvj"
+
+[functions.ai-predictions]
+verify_jwt = false
